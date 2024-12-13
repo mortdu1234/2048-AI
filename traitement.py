@@ -1,7 +1,7 @@
 """gestion de l'image du jeu"""
 import easyocr
 from pyautogui import screenshot
-from config import config_load
+from loader_config import config_load
 
 PATH = config_load("path")
 EXTENTION = config_load("extention")
@@ -37,24 +37,26 @@ def number_of(txt):
     except ValueError:
         return "error" + txt[2]
 
-def read_file(file_name):
+def read_data_file(file_name):
     reader = easyocr.Reader(["fr"])
     element_read = reader.readtext(PATH+file_name+EXTENTION)
     cells = []
+    for elem in element_read:
+        if "Lv" in elem[1]:
+            cell = [elem[0], number_of(elem[1])]
+            cells.append(cell)
+    return cells
+
+
+def read_file(file_name):
     grid = [
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0],
         [0, 0, 0, 0]
     ]
-    # coordonnées des cases sur le screen (peu etre a modifier)
+    cells = read_data_file(file_name)
     
-    # faire le trie dans les parties que l'on veut garder
-    for elem in element_read:
-        if "Lv" in elem[1]:
-            cell = [elem[0], number_of(elem[1])]
-            cells.append(cell)
-
     for line in range(len(GRID_COORDS)):
         for cols in range(len(GRID_COORDS[0])):
             for k in range(len(cells)):

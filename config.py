@@ -1,30 +1,6 @@
-from json import load, dump
-from pyautogui import screenshot
 from PIL import Image
-
-"""
-    {
-    "screen" : [1270, 90, 400, 400],
-    "grid_coords": [
-        [[896, 347], [1108, 346], [1330, 347], [1547, 347]],
-        [[890, 563], [1106, 563], [1330, 563], [1544, 563]],
-        [[896, 779], [1106, 779], [1326, 779], [1543, 779]],
-        [[890, 995], [1106, 995], [1323, 995], [1535, 995]]
-    ],
-    "time_wait" : 90,
-    "time_wait_variance": 20,
-    "file_name": "game",
-    "path": "images/",
-    "extention": ".jpg"
-}
-"""
-def config_load(data_name):
-    with open("config.json", "r") as file:
-        try:
-            return load(file)[data_name]
-        except KeyError:
-            print("ERROR : config.py | config_load : Key error")
-
+from loader_config import config_load
+from traitement import take_screen, read_data_file
 
 PATH = config_load("path")
 EXTENTION = config_load("extention")
@@ -44,13 +20,10 @@ def center(square):
     x4, y4 = square[3]
 
     # Calculate the average x and y coordinates of the four corners.
-    x = (x1 + x2 + x3 + x4) / 4
-    y = (y1 + y2 + y3 + y4) / 4
+    x = (x1 + x2 + x3 + x4) // 4
+    y = (y1 + y2 + y3 + y4) // 4
 
     return x, y
-
-def take_screen(file_name):
-    screenshot(PATH+file_name+EXTENTION, SCREEN)
 
 def user_input(cases):
     choice = 0
@@ -66,27 +39,10 @@ def user_input(cases):
             print(f"you must enter a number between 1 and {len(cases)}")
     return choice
 
-def update_coords(new_grid):
-    # Charger le fichier JSON
-    file_path = "config.json"
-    with open(file_path, "r", encoding="utf-8") as file:
-        data = load(file)
-
-    data["grid_coords"] = new_grid
-
-    # Sauvegarder les modifications en conservant l'indentation
-    with open(file_path, "w", encoding="utf-8") as file:
-        dump(data, file, ensure_ascii=False)
-
-
 def configure_coords():
-    t = [
-        [[0, 0], [1108, 346], [1330, 347], [1547, 347]],
-        [[890, 563], [1106, 563], [1330, 563], [1544, 563]],
-        [[896, 779], [0, 0], [1326, 779], [1543, 779]],
-        [[890, 995], [1106, 995], [1323, 995], [1535, 995]]
-    ]
-    update_coords(t)
+    cells = read_data_file(NAME)
+    for line in cells:
+        print(center(line[0]), line[1])
 
 if __name__ == "__main__":
     cases = ["take a screenshot", "configure_coords"]

@@ -2,7 +2,7 @@ from traitement import take_screen, read_file
 from ExpectedMax import best_choice, make_action
 from math import log2, sqrt
 from time import time, sleep
-from config import config_load
+from loader_config import config_load
 from random import gauss
 
 TIME_WAIT = config_load("time_wait")
@@ -62,7 +62,7 @@ def main():
         
         # gestion du temps d'attente
         time_to_wait = gauss(TIME_WAIT, sqrt(DELTA_TIME_WAIT))
-        
+
         t2 = time()
         sleep(time_to_wait-(t2-t1))
 
