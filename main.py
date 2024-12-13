@@ -55,11 +55,20 @@ def main():
     for _ in range(1000):
         t1 = time()
         take_screen(file_name=NAME)
+        # détermine la grille actuelle
         grid_before = read_file(file_name=NAME)
+        # détermine le meilleur choix
         choice = best_choice(grid_before)
+        # détermine la grille théorique après avoir effectuer ce choix
         grid_after = make_action(grid_before, choice)
+
+        # afficher
         show_grid(grid_before, grid_after, choice)
         
+        # effectuer l'action
+        
+
+
         # gestion du temps d'attente
         time_to_wait = gauss(TIME_WAIT, sqrt(DELTA_TIME_WAIT))
 
