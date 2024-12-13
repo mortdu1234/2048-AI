@@ -4,6 +4,7 @@ from math import log2, sqrt
 from time import time, sleep
 from loader_config import config_load
 from random import gauss
+from make_move import make_move
 
 TIME_WAIT = config_load("time_wait")
 DELTA_TIME_WAIT = config_load("time_wait_variance")
@@ -66,7 +67,7 @@ def main():
         show_grid(grid_before, grid_after, choice)
         
         # effectuer l'action
-        
+        make_move(choice)
 
 
         # gestion du temps d'attente
