@@ -3,13 +3,14 @@ import easyocr
 from pyautogui import screenshot
 from config import config_load
 
-PATH = "images/"
-EXTENTION = ".jpg"
-SCREEN = config_load("screen") 
-grid_coord = config_load("grid_coords")
+PATH = config_load("path")
+EXTENTION = config_load("extention")
+SCREEN = config_load("screen")
+GRID_COORDS = config_load("grid_coords")
+
 
 def take_screen(file_name):
-    screenshot(PATH+file_name+EXTENTION, (0, 0, 1000, 1000))
+    screenshot(PATH+file_name+EXTENTION, SCREEN)
 
 def in_square(coord, square):
     """return if point in square
@@ -28,25 +29,6 @@ def in_square(coord, square):
     yb = max(square[0][1], square[1][1], square[2][1], square[3][1])
 
     return xa <= x <= xb and ya <= y <= yb
-    
-
-def center(square):
-    """return the coords x and y of the center of the square
-
-    Args:
-        square (tuple[tuple[int, int], tuple[int, int], tuple[int, int], tuple[int, int]]): corner of the square
-    """
-    # Extract the coordinates of the four corners of the square.
-    x1, y1 = square[0]
-    x2, y2 = square[1]
-    x3, y3 = square[2]
-    x4, y4 = square[3]
-
-    # Calculate the average x and y coordinates of the four corners.
-    x = (x1 + x2 + x3 + x4) / 4
-    y = (y1 + y2 + y3 + y4) / 4
-
-    return x, y
 
 def number_of(txt):
     value = ["I", "z", "3", "4", "s", "6", "7", "8", "x", "i", "x"]
@@ -73,10 +55,10 @@ def read_file(file_name):
             cell = [elem[0], number_of(elem[1])]
             cells.append(cell)
 
-    for line in range(len(grid_coord)):
-        for cols in range(len(grid_coord[0])):
+    for line in range(len(GRID_COORDS)):
+        for cols in range(len(GRID_COORDS[0])):
             for k in range(len(cells)):
-                if in_square(grid_coord[line][cols], cells[k][0]):
+                if in_square(GRID_COORDS[line][cols], cells[k][0]):
                     grid[line][cols] = cells[k][1]
 
     return grid

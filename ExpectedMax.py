@@ -383,30 +383,29 @@ def a(i):
             return "gauche"
         case 3:
             return "droite"
+        
 
-def main():
-    """
-    [
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-        [0, 0, 0, 0],
-    ]
-    """
-    t = [
-        [0, 0, 0, 0],
-        [1, 1, 3, 3],
-        [1, 4, 5, 5],
-        [4, 6, 8, 10],
-    ]
+def make_action(grid, action:str):
+    game = Game(4, grid)
+    match action:
+        case "haut":
+            game.up()
+        case "bas":
+            game.down()
+        case "gauche":
+            game.left()
+        case "droite":
+            game.right()
+    return game.grid
+
+def manual_choice(t):
+    build_table()
     for i in range(len(t)):
         for j in range(len(t[i])):
             if t[i][j] != 0:
                 t[i][j] = 2**t[i][j]
-    print(t)
     game = Game(4, t)
     E = ExpectMax()
-    print(game.game_state())
     while game.game_state() == 'not over':
         done = E.get_move(game)
         print(a(done))
@@ -421,22 +420,29 @@ def main():
             game.left()
         if done == 3:
             game.right()
-        E.print_result(game.grid)    
+        E.print_result(game.grid)
         game.add_value()
         E.print_result(game.grid)
-    return max([max(i) for i in game.grid])
-
+    
+def best_choice(tab):
+    build_table()
+    for i in range(len(tab)):
+        for j in range(len(tab[i])):
+            if tab[i][j] != 0:
+                tab[i][j] = 2**tab[i][j]
+    game = Game(4, tab)
+    E = ExpectMax()
+    return a(E.get_move(game))
+    
 
 if __name__ == '__main__':
-    m = {}
-    build_table()
-    for i in range(1):
-        print(i)
-        maxscore =  main()
-        if maxscore in m:
-            m[maxscore] += 1
-        else:
-            m[maxscore] = 1
-        print(m)
-    print(m)
+    t = [
+        [0, 0, 0, 0],
+        [1, 1, 3, 3],
+        [1, 4, 5, 5],
+        [4, 6, 8, 10],
+    ]
+    b = make_action(t, "bas")
+    print(b)
+    # manual_choice(t)
 
